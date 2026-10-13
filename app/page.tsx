@@ -167,9 +167,7 @@ function handlePieceClick(position: number) {
         </div>
       ))}
     </div>
-<p className="text-red-600">
-  DEBUG: showFinal aktif
-</p>
+
     <button
          type="button"
           onClick={downloadCollage}
