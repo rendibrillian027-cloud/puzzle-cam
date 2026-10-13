@@ -67,7 +67,31 @@ export default function Home() {
   setMoves(0);
   setHasStarted(true);
 }
+async function downloadCollage() {
+  const collage = document.getElementById("collage");
 
+  if (!collage) {
+    alert("Kolase tidak ditemukan.");
+    return;
+  }
+
+  try {
+    const { toPng } = await import("html-to-image");
+
+    const dataUrl = await toPng(collage, {
+      pixelRatio: 2,
+      backgroundColor: "#ffffff",
+    });
+
+    const link = document.createElement("a");
+    link.download = "puzzlecam-kolase.png";
+    link.href = dataUrl;
+    link.click();
+  } catch (error) {
+    console.error("Gagal mengunduh kolase:", error);
+    alert("Kolase gagal diunduh. Coba lagi, ya.");
+  }
+}
 
 
 // TAMBAHKAN FUNGSI BARU DI BAWAH INI
@@ -116,14 +140,17 @@ function handlePieceClick(position: number) {
 {showFinal ? (
   <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
     <h2 className="text-xl text-center font-semibold">
-      Tiga Momen, Satu Cerita
+      Momen, Satu Cerita
     </h2>
 
     <p className="mt-2 mb-6 text-center text-sm text-stone-500">
       Puzzle selesai! Ini kumpulan foto kamu.
     </p>
 
-    <div className="flex flex-col items-center gap-4">
+    <div 
+    id="collage"
+    className="flex flex-col items-center gap-4"
+    >
       {completedPhotos.map((completedPhoto, index) => (
         <div
           key={index}
@@ -140,9 +167,20 @@ function handlePieceClick(position: number) {
         </div>
       ))}
     </div>
-  </section>
-) : (
-  <>
+<p className="text-red-600">
+  DEBUG: showFinal aktif
+</p>
+    <button
+         type="button"
+          onClick={downloadCollage}
+        className="mt-6 w-full rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white hover:bg-emerald-800"
+        >
+          Download Kolase
+    </button>
+      </section>
+    ) : (
+        <>
+
         <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-lg font-semibold">
             Pilih foto kamu
